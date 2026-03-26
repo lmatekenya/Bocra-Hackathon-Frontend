@@ -8,9 +8,13 @@
 - `.github/workflows/firebase-deploy.yml` builds and deploys on push to `main`.
 
 ### 2. GitHub secrets to add
-- `FIREBASE_PROJECT_ID`
-- `FIREBASE_SERVICE_ACCOUNT`
+- `FIREBASE_SERVICE_ACCOUNT_BOCRA_WEB` (preferred) or `FIREBASE_SERVICE_ACCOUNT`
   - value should be the full JSON service account content as a secret.
+- `NEXT_PUBLIC_API_URL`
+  - value should be your backend URL, for example `https://<railway-service>.up.railway.app`
+- optional:
+  - `NEXT_PUBLIC_SITE_URL`
+  - `NEXT_PUBLIC_TURNSTILE_SITE_KEY`
 
 ### 3. Environment values
 - create `.env.local` (or repo/environment secret) from `.env.example`
@@ -19,8 +23,9 @@
 
 ### 4. Manual first-time Firebase setup
 - Authenticate Firebase CLI once locally.
-- Ensure Hosting is initialized for this repo and project.
+- Ensure **Firebase Hosting** is initialized for this repo and project.
 - Confirm `.firebaserc` default project id.
+- Do not select **App Hosting** unless billing (Blaze plan) is enabled; this repo deploys as static Hosting.
 
 ## B) Backend (sibling backend repository) -> Railway
 

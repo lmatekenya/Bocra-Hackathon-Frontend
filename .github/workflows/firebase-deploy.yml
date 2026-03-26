@@ -3,23 +3,20 @@ name: Frontend Firebase Deploy
 on:
   push:
     branches: ["main"]
-    paths:
-      - "app/**"
-      - "components/**"
-      - "lib/**"
-      - "styles/**"
-      - "public/**"
-      - "package.json"
-      - "package-lock.json"
-      - "next.config.mjs"
-      - "firebase.json"
-      - ".firebaserc"
-      - ".github/workflows/firebase-deploy.yml"
   workflow_dispatch:
+
+concurrency:
+  group: firebase-deploy-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+
+    env:
+      NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
+      NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
+      NEXT_PUBLIC_TURNSTILE_SITE_KEY: ${{ secrets.NEXT_PUBLIC_TURNSTILE_SITE_KEY }}
 
     steps:
       - name: Checkout
@@ -34,6 +31,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Validate required environment
+        run: |
+          if [ -z "$NEXT_PUBLIC_API_URL" ]; then
+            echo "Missing NEXT_PUBLIC_API_URL GitHub secret."
+            echo "Set it to your backend base URL, e.g. https://your-railway-service.up.railway.app"
+            exit 1
+          fi
+
       - name: Build static site
         run: npm run build
 
@@ -41,6 +46,6 @@ jobs:
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}"
-          projectId: "${{ secrets.FIREBASE_PROJECT_ID }}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_BOCRA_WEB || secrets.FIREBASE_SERVICE_ACCOUNT }}"
+          projectId: "bocra-web"
           channelId: live
