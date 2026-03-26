@@ -15,4 +15,5 @@ node_modules
 .next/
 out/
 .firebase/
+firebase-debug.log
 .DS_Store

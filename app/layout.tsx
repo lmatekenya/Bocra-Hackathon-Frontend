@@ -1,21 +1,10 @@
 import type { Metadata, Viewport } from 'next'
-import { Inter, Space_Grotesk } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 import { GlobalAnimation } from "@/components/global-animation"
 
-const inter = Inter({
-  subsets: ["latin"],
-  variable: '--font-inter'
-});
-
-const spaceGrotesk = Space_Grotesk({
-  subsets: ["latin"],
-  variable: '--font-space-grotesk'
-});
-
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://bocra-portal.web.app"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://bocra-web.web.app"),
   title: {
     default: "BOCRA | Botswana Communications Regulatory Authority",
     template: "%s | BOCRA",
@@ -57,7 +46,7 @@ export const metadata: Metadata = {
     title: "BOCRA Digital Portal",
     description:
       "Regulating Botswana's digital future with secure public services and transparent governance.",
-    url: "https://bocra-portal.web.app",
+    url: "https://bocra-web.web.app",
     siteName: "BOCRA",
   },
 }
@@ -75,7 +64,15 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable}`}>
+    <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Space+Grotesk:wght@300..700&display=swap"
+          rel="stylesheet"
+        />
+      </head>
       <body className="font-sans antialiased relative bg-background">
         <GlobalAnimation />
         <div className="relative z-10">
