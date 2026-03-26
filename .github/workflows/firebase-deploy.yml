@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
+      NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL || 'https://bocra-hackathon-backend-production.up.railway.app' }}
       NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL || 'https://bocra-web.web.app' }}
       NEXT_PUBLIC_TURNSTILE_SITE_KEY: ${{ secrets.NEXT_PUBLIC_TURNSTILE_SITE_KEY }}
 
@@ -30,14 +30,6 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-
-      - name: Validate required environment
-        run: |
-          if [ -z "$NEXT_PUBLIC_API_URL" ]; then
-            echo "Missing NEXT_PUBLIC_API_URL GitHub secret."
-            echo "Set it to your backend base URL, e.g. https://your-railway-service.up.railway.app"
-            exit 1
-          fi
 
       - name: Build static site
         run: npm run build

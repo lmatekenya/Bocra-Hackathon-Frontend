@@ -10,16 +10,21 @@
 ### 2. GitHub secrets to add
 - `FIREBASE_SERVICE_ACCOUNT_BOCRA_WEB` (preferred) or `FIREBASE_SERVICE_ACCOUNT`
   - value should be the full JSON service account content as a secret.
-- `NEXT_PUBLIC_API_URL`
-  - value should be your backend URL, for example `https://<railway-service>.up.railway.app`
+- optional: `NEXT_PUBLIC_API_URL`
+  - if unset, workflow default is `https://bocra-hackathon-backend-production.up.railway.app`
 - optional:
   - `NEXT_PUBLIC_SITE_URL`
+    - recommended value: `https://bocra-web.web.app`
   - `NEXT_PUBLIC_TURNSTILE_SITE_KEY`
+- helper automation in this repo:
+  - `scripts/set-github-secrets.ps1`
+  - run after `gh auth login` to set the standard frontend secrets quickly.
 
 ### 3. Environment values
 - create `.env.local` (or repo/environment secret) from `.env.example`
 - set:
-  - `NEXT_PUBLIC_API_URL=https://<your-railway-backend-domain>`
+  - `NEXT_PUBLIC_API_URL=https://bocra-hackathon-backend-production.up.railway.app`
+  - `NEXT_PUBLIC_SITE_URL=https://bocra-web.web.app`
 
 ### 4. Manual first-time Firebase setup
 - Authenticate Firebase CLI once locally.
@@ -46,6 +51,7 @@
 - `APP_JWT_SECRET=<long random secret>`
 - `APP_JWT_EXPIRATION_MS=3600000`
 - `APP_CORS_ALLOWED_ORIGINS=https://<your-firebase-domain>`
+  - current target value: `APP_CORS_ALLOWED_ORIGINS=https://bocra-web.web.app`
 - `APP_ADMIN_BOOTSTRAP_USERNAME=<initial admin username>`
 - `APP_ADMIN_BOOTSTRAP_PASSWORD=<initial admin password>`
 

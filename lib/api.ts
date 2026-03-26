@@ -13,7 +13,10 @@ import type {
 import { getAdminToken } from "./admin-session"
 
 export const API_BASE =
-  process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ?? "http://localhost:8083"
+  process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ??
+  (process.env.NODE_ENV === "development"
+    ? "http://localhost:8083"
+    : "https://bocra-hackathon-backend-production.up.railway.app")
 
 interface ApiFetchOptions extends RequestInit {
   parseAsText?: boolean

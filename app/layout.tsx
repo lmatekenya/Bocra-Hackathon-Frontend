@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 import { GlobalAnimation } from "@/components/global-animation"
+import { BocraAssistant } from "@/components/bocra-assistant"
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://bocra-web.web.app"),
@@ -78,6 +79,7 @@ export default function RootLayout({
         <div className="relative z-10">
           {children}
         </div>
+        <BocraAssistant />
         <Analytics />
       </body>
     </html>
