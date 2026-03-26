@@ -6,39 +6,39 @@ import Link from "next/link"
 
 const footerLinks = {
   services: [
-    { name: "Telecommunications", href: "#" },
-    { name: "Broadcasting", href: "#" },
-    { name: "Internet Services", href: "#" },
-    { name: "Spectrum Management", href: "#" },
-    { name: "Cybersecurity", href: "#" },
+    { name: "Telecommunications", href: "/mandate/telecommunications" },
+    { name: "Broadcasting", href: "/mandate/broadcasting" },
+    { name: "Internet Services", href: "/mandate/internet" },
+    { name: "Spectrum Management", href: "/services/spectrum" },
+    { name: "Cybersecurity", href: "/cybersecurity" },
   ],
   resources: [
-    { name: "File Complaint", href: "#complaint" },
-    { name: "Apply for License", href: "#licenses" },
-    { name: "Search Domains", href: "#domains" },
-    { name: "Regulations", href: "#" },
-    { name: "Publications", href: "#" },
+    { name: "File Complaint", href: "/complaints" },
+    { name: "Apply for License", href: "/services/licensing" },
+    { name: "News & Media", href: "/news" },
+    { name: "Regulations & Documents", href: "/documents" },
+    { name: "Open Tenders", href: "/tenders" },
   ],
   about: [
-    { name: "About BOCRA", href: "#" },
-    { name: "Leadership", href: "#" },
-    { name: "Careers", href: "#" },
-    { name: "Contact Us", href: "#" },
-    { name: "FAQ", href: "#" },
+    { name: "About BOCRA", href: "/about" },
+    { name: "Leadership", href: "/about#leadership" },
+    { name: "Mission & Vision", href: "/about#mission" },
+    { name: "Board of Directors", href: "/about#board" },
+    { name: "Contact Us", href: "/contact" },
   ],
   legal: [
-    { name: "Privacy Policy", href: "#" },
-    { name: "Terms of Service", href: "#" },
-    { name: "Cookie Policy", href: "#" },
-    { name: "Accessibility", href: "#" },
+    { name: "Privacy Notice", href: "/documents" },
+    { name: "Terms of Use", href: "/documents" },
+    { name: "Accessibility", href: "/contact" },
+    { name: "Report Security Issue", href: "/cybersecurity" },
   ],
 }
 
 const socialLinks = [
-  { name: "Facebook", icon: Facebook, href: "#" },
-  { name: "Twitter", icon: Twitter, href: "#" },
-  { name: "LinkedIn", icon: Linkedin, href: "#" },
-  { name: "YouTube", icon: Youtube, href: "#" },
+  { name: "Facebook", icon: Facebook, href: "https://www.facebook.com/bocrabw" },
+  { name: "Twitter", icon: Twitter, href: "https://x.com/bocrabw" },
+  { name: "LinkedIn", icon: Linkedin, href: "https://www.linkedin.com/company/bocra" },
+  { name: "YouTube", icon: Youtube, href: "https://www.youtube.com/@bocra" },
 ]
 
 export function Footer() {
@@ -214,6 +214,8 @@ export function Footer() {
                 <a
                   key={social.name}
                   href={social.href}
+                  target="_blank"
+                  rel="noreferrer"
                   className="w-9 h-9 rounded-full bg-muted/50 flex items-center justify-center text-muted-foreground hover:text-white hover:bg-bocra-blue transition-all"
                   aria-label={social.name}
                 >

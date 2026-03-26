@@ -103,10 +103,7 @@ export default function NewsPage() {
                                         </div>
 
                                         <h3 className="font-display text-xl font-bold text-foreground group-hover:text-bocra-blue transition-colors mb-4 line-clamp-2">
-                                            <a href={`/news/${item.id}`}>
-                                                <span className="absolute inset-0" />
-                                                {item.title}
-                                            </a>
+                                            {item.title}
                                         </h3>
 
                                         <p className="text-muted-foreground line-clamp-3 mb-6 text-sm leading-relaxed flex-1">

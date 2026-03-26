@@ -15,9 +15,26 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: 'BOCRA | Botswana Communications Regulatory Authority',
-  description: 'Regulating Botswana\'s Digital Future - Empowering consumers, supporting businesses, and securing digital infrastructure.',
-  generator: 'v0.app',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://bocra-portal.web.app"),
+  title: {
+    default: "BOCRA | Botswana Communications Regulatory Authority",
+    template: "%s | BOCRA",
+  },
+  description:
+    "Official BOCRA digital portal for consumer protection, licensing, spectrum, cybersecurity, and public notices.",
+  applicationName: "BOCRA Digital Portal",
+  keywords: [
+    "BOCRA",
+    "Botswana communications regulator",
+    "consumer complaints",
+    "cybersecurity Botswana",
+    "licensing",
+    "spectrum",
+  ],
+  robots: {
+    index: true,
+    follow: true,
+  },
   icons: {
     icon: [
       {
@@ -35,12 +52,21 @@ export const metadata: Metadata = {
     ],
     apple: '/apple-icon.png',
   },
+  openGraph: {
+    type: "website",
+    title: "BOCRA Digital Portal",
+    description:
+      "Regulating Botswana's digital future with secure public services and transparent governance.",
+    url: "https://bocra-portal.web.app",
+    siteName: "BOCRA",
+  },
 }
 
 export const viewport: Viewport = {
   themeColor: '#005BA6',
   width: 'device-width',
   initialScale: 1,
+  colorScheme: "light dark",
 }
 
 export default function RootLayout({

@@ -13,6 +13,7 @@ const stories = [
     gradient: "from-bocra-blue/20 to-transparent",
     iconBg: "from-bocra-blue to-bocra-green",
     iconColor: "text-bocra-blue",
+    href: "/complaints",
   },
   {
     title: "Supporting Businesses",
@@ -22,6 +23,7 @@ const stories = [
     gradient: "from-bocra-green/20 to-transparent",
     iconBg: "from-bocra-green to-bocra-blue",
     iconColor: "text-bocra-green",
+    href: "/services/licensing",
   },
   {
     title: "Securing Infrastructure",
@@ -31,6 +33,7 @@ const stories = [
     gradient: "from-bocra-gold/20 to-transparent",
     iconBg: "from-bocra-gold to-bocra-blue",
     iconColor: "text-bocra-gold",
+    href: "/cybersecurity",
   },
 ]
 
@@ -91,7 +94,7 @@ function StoryPanel({
               </p>
 
               <motion.a
-                href="#"
+                href={story.href}
                 whileHover={{ x: 5 }}
                 className="inline-flex items-center gap-2 text-bocra-blue font-semibold"
               >

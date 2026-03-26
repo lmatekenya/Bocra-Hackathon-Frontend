@@ -1,13 +1,10 @@
 "use client"
-
-import type { Metadata } from "next"
 import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 import { ShieldAlert, Phone, HelpCircle, FileText, CheckCircle2, AlertTriangle, AlertCircle } from "lucide-react"
 import { useState } from "react"
 import { motion } from "framer-motion"
 import { submitComplaint } from "@/lib/api"
-import type { Complaint } from "@/types"
 
 const steps = [
     {

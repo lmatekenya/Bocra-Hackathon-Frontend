@@ -1,32 +1,43 @@
 "use client"
 
-export interface AuthState {
-    token: string | null
-    username: string | null
-    role: string | null
+import type { AdminProfile } from "@/types"
+import { fetchAdminProfile, loginAdmin, logoutAdmin } from "./api"
+import {
+  clearAdminSession,
+  getAdminSession,
+  saveAdminSession,
+} from "./admin-session"
+
+export async function signInAdmin(username: string, password: string): Promise<AdminProfile> {
+  const response = await loginAdmin({ username, password })
+  const profile = { username: response.username, role: response.role }
+  saveAdminSession({ ...profile, token: response.token })
+  return profile
 }
 
-export const saveAuth = (auth: AuthState) => {
-    if (typeof window !== "undefined") {
-        localStorage.setItem("bocra_auth", JSON.stringify(auth))
-    }
+export async function signOutAdmin(): Promise<void> {
+  try {
+    await logoutAdmin()
+  } finally {
+    clearCachedAdminProfile()
+  }
 }
 
-export const getAuth = (): AuthState => {
-    if (typeof window !== "undefined") {
-        const saved = localStorage.getItem("bocra_auth")
-        if (saved) return JSON.parse(saved)
-    }
-    return { token: null, username: null, role: null }
+export async function getAuthenticatedAdmin(): Promise<AdminProfile> {
+  const profile = await fetchAdminProfile()
+  const existing = getAdminSession()
+  if (existing) {
+    saveAdminSession({ ...profile, token: existing.token })
+  }
+  return profile
 }
 
-export const clearAuth = () => {
-    if (typeof window !== "undefined") {
-        localStorage.removeItem("bocra_auth")
-    }
+export function getCachedAdminProfile(): AdminProfile | null {
+  const session = getAdminSession()
+  if (!session) return null
+  return { username: session.username, role: session.role }
 }
 
-export const getAuthHeader = () => {
-    const auth = getAuth()
-    return auth.token ? { Authorization: `Bearer ${auth.token}` } : {}
+export function clearCachedAdminProfile(): void {
+  clearAdminSession()
 }

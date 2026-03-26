@@ -102,15 +102,15 @@ export function Navbar() {
               onMouseEnter={() => setAboutOpen(true)}
               onMouseLeave={() => setAboutOpen(false)}
             >
-              <button
-                onClick={() => window.location.href = '/about'}
+              <Link
+                href="/about"
                 className="flex items-center gap-1 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
               >
                 About
                 <ChevronDown
                   className={`w-4 h-4 transition-transform duration-200 ${aboutOpen ? "rotate-180" : ""}`}
                 />
-              </button>
+              </Link>
 
               <AnimatePresence>
                 {aboutOpen && (

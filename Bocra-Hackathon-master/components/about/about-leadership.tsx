@@ -163,11 +163,11 @@ export function AboutLeadership() {
                             <p className="text-sm text-muted-foreground">Join our team and help shape Botswana's digital future.</p>
                         </div>
                         <motion.a
-                            href="#"
+                            href="/contact"
                             whileHover={{ x: 4 }}
                             className="ml-4 inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-bocra-blue to-bocra-green text-white text-sm font-semibold"
                         >
-                            View Careers
+                            Contact BOCRA
                             <ArrowRight className="w-4 h-4" />
                         </motion.a>
                     </div>

@@ -3,7 +3,7 @@
 // =============================================================================
 
 export interface NewsArticle {
-  id: string
+  id: number | string
   title: string
   summary: string
   content?: string
@@ -14,7 +14,7 @@ export interface NewsArticle {
 }
 
 export interface Complaint {
-  id?: string
+  id?: number | string
   ticketId?: string
   fullName: string
   email: string
@@ -39,7 +39,7 @@ export interface Inquiry {
 
 export interface CyberIncident {
   id?: number
-  incidentId: string
+  incidentId?: string
   reporterType: string
   organizationName?: string
   incidentType: string
@@ -115,4 +115,9 @@ export interface APIResponse<T> {
   success: boolean
   message?: string
   total?: number
+}
+
+export interface AdminProfile {
+  username: string
+  role: string
 }

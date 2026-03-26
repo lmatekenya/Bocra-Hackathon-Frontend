@@ -34,14 +34,16 @@ const fallbackNews: NewsArticle[] = [
 ]
 
 export function NewsSection() {
-  const [news, setNews] = useState<NewsArticle[]>([])
+  const [news, setNews] = useState<NewsArticle[]>(fallbackNews)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     async function loadNews() {
       try {
         const articles = await fetchNews(3)
-        setNews(articles)
+        if (articles.length > 0) {
+          setNews(articles)
+        }
       } catch (err) {
         console.error("Failed to load news:", err)
       } finally {
@@ -87,7 +89,7 @@ export function NewsSection() {
             </h2>
           </div>
           <motion.a
-            href="#all-news"
+            href="/news"
             whileHover={{ x: 5 }}
             className="inline-flex items-center gap-2 text-bocra-blue font-semibold"
           >
@@ -114,11 +116,11 @@ export function NewsSection() {
               transition={{ duration: 0.5, delay: index * 0.1 }}
               className="group"
             >
-              <motion.a
-                href={`/news/${item.slug}`}
-                whileHover={{ y: -8 }}
-                className="block"
-              >
+                <motion.a
+                  href="/news"
+                  whileHover={{ y: -8 }}
+                  className="block"
+                >
                 {/* Image */}
                 <div className="relative aspect-[16/10] rounded-2xl overflow-hidden mb-6 bg-muted">
                   <div className="absolute inset-0 bg-gradient-to-br from-bocra-blue/20 to-bocra-green/20" />

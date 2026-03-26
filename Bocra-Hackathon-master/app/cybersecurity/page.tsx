@@ -3,10 +3,9 @@
 import { useState } from "react"
 import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
-import { Shield, AlertTriangle, ShieldAlert, CheckCircle, FileWarning, Send, Loader2, AlertCircle } from "lucide-react"
+import { Shield, AlertTriangle, ShieldAlert, CheckCircle, FileWarning, Loader2, AlertCircle } from "lucide-react"
 import { submitCyberIncident } from "@/lib/api"
 import { motion } from "framer-motion"
-import type { CyberIncident } from "@/types"
 
 const advisories = [
     {
@@ -59,15 +58,10 @@ export default function CybersecurityPage() {
         setLoading(true)
         setError(null)
         
-        const generatedId = `INC-${Math.random().toString(36).substr(2, 9).toUpperCase()}`
-        
         try {
-            const res = await submitCyberIncident({
-                ...formData,
-                incidentId: generatedId
-            })
+            const res = await submitCyberIncident(formData)
             if (res.success) {
-                setIncidentId(res.incidentId || generatedId)
+                setIncidentId(res.incidentId || "")
                 setSuccess(true)
             } else {
                 setError(res.message || "Failed to submit report")
