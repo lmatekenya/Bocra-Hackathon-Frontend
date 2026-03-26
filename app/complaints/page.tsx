@@ -5,6 +5,7 @@ import { ShieldAlert, Phone, HelpCircle, FileText, CheckCircle2, AlertTriangle, 
 import { useState } from "react"
 import { motion } from "framer-motion"
 import { submitComplaint } from "@/lib/api"
+import { CaptchaField } from "@/components/captcha-field"
 
 const steps = [
     {
@@ -39,6 +40,8 @@ export default function ComplaintsPage() {
     const [success, setSuccess] = useState(false)
     const [ticketId, setTicketId] = useState("")
     const [error, setError] = useState<string | null>(null)
+    const [captchaToken, setCaptchaToken] = useState("")
+    const [captchaRefreshKey, setCaptchaRefreshKey] = useState(0)
 
     const [formData, setFormData] = useState({
         fullName: "",
@@ -51,20 +54,48 @@ export default function ComplaintsPage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
+        const detailsLength = formData.complaintDetails.trim().length
+        if (detailsLength < 20) {
+            setError("Please provide at least 20 characters in complaint details.")
+            return
+        }
+        if (!captchaToken) {
+            setError("Please complete the security check before submitting.")
+            return
+        }
+
         setLoading(true)
         setError(null)
 
         try {
-            const res = await submitComplaint(formData)
+            const res = await submitComplaint({
+                ...formData,
+                fullName: formData.fullName.trim(),
+                contactNumber: formData.contactNumber.trim(),
+                serviceProvider: formData.serviceProvider.trim(),
+                providerReference: formData.providerReference.trim(),
+                email: formData.email.trim(),
+                complaintDetails: formData.complaintDetails.trim(),
+                captchaToken,
+            })
             if (res.success) {
                 setTicketId(res.ticketId || "")
                 setSuccess(true)
+                setFormData({
+                    fullName: "",
+                    contactNumber: "",
+                    serviceProvider: "",
+                    providerReference: "",
+                    email: "",
+                    complaintDetails: ""
+                })
             } else {
                 setError(res.message || "Failed to submit complaint")
             }
         } catch (err: any) {
             setError(err.message || "A connection error occurred")
         } finally {
+            setCaptchaRefreshKey((prev) => prev + 1)
             setLoading(false)
         }
     }
@@ -189,6 +220,7 @@ export default function ComplaintsPage() {
                                                         value={formData.fullName}
                                                         onChange={handleChange}
                                                         type="text" 
+                                                        maxLength={160}
                                                         placeholder="e.g. Thabo Motswana"
                                                         className="w-full px-4 py-3 rounded-xl bg-muted/50 border border-border focus:border-bocra-blue focus:ring-1 focus:ring-bocra-blue outline-none transition-all" 
                                                     />
@@ -201,6 +233,8 @@ export default function ComplaintsPage() {
                                                         value={formData.contactNumber}
                                                         onChange={handleChange}
                                                         type="tel" 
+                                                        pattern="^[+0-9 ()-]{7,30}$"
+                                                        maxLength={30}
                                                         placeholder="e.g. +267 71 000 000"
                                                         className="w-full px-4 py-3 rounded-xl bg-muted/50 border border-border focus:border-bocra-blue focus:ring-1 focus:ring-bocra-blue outline-none transition-all" 
                                                     />
@@ -234,6 +268,7 @@ export default function ComplaintsPage() {
                                                         value={formData.providerReference}
                                                         onChange={handleChange}
                                                         type="text" 
+                                                        maxLength={120}
                                                         placeholder="e.g. INC12345" 
                                                         className="w-full px-4 py-3 rounded-xl bg-muted/50 border border-border focus:border-bocra-blue focus:ring-1 focus:ring-bocra-blue outline-none transition-all" 
                                                     />
@@ -248,6 +283,7 @@ export default function ComplaintsPage() {
                                                     value={formData.email}
                                                     onChange={handleChange}
                                                     type="email" 
+                                                    maxLength={255}
                                                     placeholder="yourname@domain.bw"
                                                     className="w-full px-4 py-3 rounded-xl bg-muted/50 border border-border focus:border-bocra-blue focus:ring-1 focus:ring-bocra-blue outline-none transition-all" 
                                                 />
@@ -261,10 +297,18 @@ export default function ComplaintsPage() {
                                                     value={formData.complaintDetails}
                                                     onChange={handleChange}
                                                     rows={5} 
+                                                    minLength={20}
+                                                    maxLength={5000}
                                                     placeholder="Describe the issue in detail..." 
                                                     className="w-full px-4 py-3 rounded-xl bg-muted/50 border border-border focus:border-bocra-blue focus:ring-1 focus:ring-bocra-blue outline-none transition-all resize-none"
                                                 ></textarea>
                                             </div>
+
+                                            <CaptchaField
+                                                value={captchaToken}
+                                                onChange={setCaptchaToken}
+                                                refreshKey={captchaRefreshKey}
+                                            />
 
                                             <button
                                                 disabled={loading}

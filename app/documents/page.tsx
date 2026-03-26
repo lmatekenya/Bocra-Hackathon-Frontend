@@ -24,15 +24,44 @@ const defaultCategories = [
     { title: "Consultation Papers", description: "Draft policies open for public comment." },
 ]
 
+const fallbackDocuments: Document[] = [
+    {
+        id: 7001,
+        name: "Communications Regulatory Authority Act, 2012",
+        category: "Acts and Legislation",
+        size: "2.4 MB",
+        date: "Apr 2013",
+        url: "https://www.bocra.org.bw/sites/default/files/documents/CRA%20Act%202012.pdf",
+    },
+    {
+        id: 7002,
+        name: "BOCRA Licensing Framework",
+        category: "Guidelines & Frameworks",
+        size: "3.2 MB",
+        date: "Jan 2023",
+        url: "https://www.bocra.org.bw/sites/default/files/documents/Licensing%20Framework.pdf",
+    },
+    {
+        id: 7003,
+        name: "BOCRA Annual Report 2024/2025",
+        category: "Annual Reports",
+        size: "8.5 MB",
+        date: "Oct 2025",
+        url: "https://www.bocra.org.bw/sites/default/files/documents/Annual%20Report.pdf",
+    },
+]
+
 export default function DocumentsPage() {
-    const [documents, setDocuments] = useState<Document[]>([])
+    const [documents, setDocuments] = useState<Document[]>(fallbackDocuments)
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         async function loadDocs() {
             try {
                 const data = await fetchDocuments()
-                setDocuments(data)
+                if (data.length > 0) {
+                    setDocuments(data)
+                }
             } catch (err) {
                 console.error("Failed to load documents:", err)
             } finally {

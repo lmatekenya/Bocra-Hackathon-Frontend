@@ -8,15 +8,47 @@ import { Calendar, ArrowRight, Rss, Loader2 } from "lucide-react"
 import { fetchNews } from "@/lib/api"
 import type { NewsArticle } from "@/types"
 
+const fallbackNews: NewsArticle[] = [
+    {
+        id: "demo-news-1",
+        title: "BOCRA Strengthens National Cyber Resilience Framework",
+        summary: "A coordinated cyber preparedness program has been launched across public institutions and operators.",
+        category: "Cyber Advisory",
+        publishedAt: "2026-03-24",
+        imageUrl: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1200&q=80",
+        slug: "bocra-cyber-resilience-framework",
+    },
+    {
+        id: "demo-news-2",
+        title: "Rural Broadband Expansion Milestone Reached",
+        summary: "Regulatory incentives and infrastructure coordination have improved broadband access in underserved districts.",
+        category: "Press Release",
+        publishedAt: "2026-03-20",
+        imageUrl: "https://images.unsplash.com/photo-1496171367470-9ed9a91ea931?w=1200&q=80",
+        slug: "rural-broadband-expansion-milestone",
+    },
+    {
+        id: "demo-news-3",
+        title: "Updated Type Approval Compliance Notice Issued",
+        summary: "Vendors and importers are advised on updated compliance requirements for communications equipment.",
+        category: "Regulation Update",
+        publishedAt: "2026-03-18",
+        imageUrl: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=1200&q=80",
+        slug: "type-approval-compliance-notice-2026",
+    },
+]
+
 export default function NewsPage() {
-    const [news, setNews] = useState<NewsArticle[]>([])
+    const [news, setNews] = useState<NewsArticle[]>(fallbackNews)
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         const loadNews = async () => {
             try {
                 const articles = await fetchNews()
-                setNews(articles)
+                if (articles.length > 0) {
+                    setNews(articles)
+                }
             } catch (err) {
                 console.error("Failed to load news:", err)
             } finally {

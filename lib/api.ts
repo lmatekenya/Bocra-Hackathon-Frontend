@@ -1,5 +1,6 @@
 import type {
   AdminProfile,
+  AuditLog,
   Complaint,
   CyberIncident,
   Document,
@@ -112,6 +113,18 @@ export async function submitComplaint(
 
 export async function fetchAdminComplaints(): Promise<Complaint[]> {
   return apiFetch<Complaint[]>("/api/v1/admin/complaints")
+}
+
+export async function fetchAdminInquiries(): Promise<Inquiry[]> {
+  return apiFetch<Inquiry[]>("/api/v1/admin/inquiries")
+}
+
+export async function fetchAdminCyberIncidents(): Promise<CyberIncident[]> {
+  return apiFetch<CyberIncident[]>("/api/v1/admin/cyber-incidents")
+}
+
+export async function fetchAdminAuditLogs(): Promise<AuditLog[]> {
+  return apiFetch<AuditLog[]>("/api/v1/admin/audit-logs")
 }
 
 export async function submitInquiry(

@@ -22,6 +22,7 @@ export interface Complaint {
   serviceProvider: string
   providerReference?: string
   complaintDetails: string
+  captchaToken?: string
   status?: string
   createdAt?: string
 }
@@ -33,6 +34,7 @@ export interface Inquiry {
   email: string
   inquiryType: string
   message: string
+  captchaToken?: string
   status?: string
   submittedAt?: string
 }
@@ -46,8 +48,20 @@ export interface CyberIncident {
   dateOfIncident: string
   email: string
   description: string
+  captchaToken?: string
   status?: string
   reportedAt?: string
+}
+
+export interface AuditLog {
+  id: number
+  eventType: string
+  actor: string
+  target?: string
+  outcome: string
+  details?: string
+  sourceIp?: string
+  createdAt?: string
 }
 
 export interface License {

@@ -8,15 +8,40 @@ import { Briefcase, Calendar, Clock, Download, ChevronRight, Loader2 } from "luc
 import { fetchTenders } from "@/lib/api"
 import type { Tender } from "@/types"
 
+const fallbackTenders: Tender[] = [
+    {
+        id: 9001,
+        tenderNumber: "BOCRA/PT/001/2026",
+        title: "Provision of National Cybersecurity Audit Services",
+        type: "Open Domestic Tender",
+        publishDate: "2026-03-01",
+        closingDate: "2026-05-15",
+        status: "OPEN",
+        description: "Engagement of qualified firms to assess cybersecurity readiness and recommend controls.",
+    },
+    {
+        id: 9002,
+        tenderNumber: "BOCRA/EOI/002/2026",
+        title: "Expression of Interest: Broadband Cost Modelling Framework",
+        type: "Expression of Interest",
+        publishDate: "2026-02-14",
+        closingDate: "2026-04-30",
+        status: "OPEN",
+        description: "Development of a robust regulatory cost model for market analysis and planning.",
+    },
+]
+
 export default function TendersPage() {
-    const [tenders, setTenders] = useState<Tender[]>([])
+    const [tenders, setTenders] = useState<Tender[]>(fallbackTenders)
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         async function loadTenders() {
             try {
                 const data = await fetchTenders()
-                setTenders(data)
+                if (data.length > 0) {
+                    setTenders(data)
+                }
             } catch (err) {
                 console.error("Failed to load tenders:", err)
             } finally {

@@ -6,6 +6,7 @@ import { Footer } from "@/components/footer"
 import { MapPin, Phone, Mail, Clock, MessageSquare, Send, CheckCircle2, AlertCircle, Loader2 } from "lucide-react"
 import { submitInquiry } from "@/lib/api"
 import { motion } from "framer-motion"
+import { CaptchaField } from "@/components/captcha-field"
 
 const offices = [
     {
@@ -30,6 +31,8 @@ export default function ContactPage() {
     const [loading, setLoading] = useState(false)
     const [success, setSuccess] = useState(false)
     const [error, setError] = useState<string | null>(null)
+    const [captchaToken, setCaptchaToken] = useState("")
+    const [captchaRefreshKey, setCaptchaRefreshKey] = useState(0)
     const [formData, setFormData] = useState({
         firstName: "",
         lastName: "",
@@ -44,18 +47,43 @@ export default function ContactPage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
+        if (formData.message.trim().length < 15) {
+            setError("Please provide a message with at least 15 characters.")
+            return
+        }
+        if (!captchaToken) {
+            setError("Please complete the security check before submitting.")
+            return
+        }
+
         setLoading(true)
         setError(null)
         try {
-            const res = await submitInquiry(formData)
+            const res = await submitInquiry({
+                ...formData,
+                firstName: formData.firstName.trim(),
+                lastName: formData.lastName.trim(),
+                email: formData.email.trim(),
+                inquiryType: formData.inquiryType.trim(),
+                message: formData.message.trim(),
+                captchaToken,
+            })
             if (res.success) {
                 setSuccess(true)
+                setFormData({
+                    firstName: "",
+                    lastName: "",
+                    email: "",
+                    inquiryType: "General Inquiry",
+                    message: ""
+                })
             } else {
                 setError(res.message || "Failed to send message")
             }
         } catch (err: any) {
             setError(err.message || "Connection error")
         } finally {
+            setCaptchaRefreshKey((prev) => prev + 1)
             setLoading(false)
         }
     }
@@ -170,17 +198,17 @@ export default function ContactPage() {
                                             <div className="grid sm:grid-cols-2 gap-6">
                                                 <div className="space-y-2">
                                                     <label htmlFor="firstName" className="text-sm font-medium text-foreground">First Name</label>
-                                                    <input required id="firstName" value={formData.firstName} onChange={handleChange} type="text" className="w-full px-4 py-3 rounded-xl bg-muted/50 border border-border focus:border-bocra-blue focus:ring-1 focus:ring-bocra-blue outline-none transition-all" />
+                                                    <input required id="firstName" value={formData.firstName} onChange={handleChange} type="text" maxLength={120} className="w-full px-4 py-3 rounded-xl bg-muted/50 border border-border focus:border-bocra-blue focus:ring-1 focus:ring-bocra-blue outline-none transition-all" />
                                                 </div>
                                                 <div className="space-y-2">
                                                     <label htmlFor="lastName" className="text-sm font-medium text-foreground">Last Name</label>
-                                                    <input required id="lastName" value={formData.lastName} onChange={handleChange} type="text" className="w-full px-4 py-3 rounded-xl bg-muted/50 border border-border focus:border-bocra-blue focus:ring-1 focus:ring-bocra-blue outline-none transition-all" />
+                                                    <input required id="lastName" value={formData.lastName} onChange={handleChange} type="text" maxLength={120} className="w-full px-4 py-3 rounded-xl bg-muted/50 border border-border focus:border-bocra-blue focus:ring-1 focus:ring-bocra-blue outline-none transition-all" />
                                                 </div>
                                             </div>
 
                                             <div className="space-y-2">
                                                 <label htmlFor="email" className="text-sm font-medium text-foreground">Email Address</label>
-                                                <input required id="email" value={formData.email} onChange={handleChange} type="email" className="w-full px-4 py-3 rounded-xl bg-muted/50 border border-border focus:border-bocra-blue focus:ring-1 focus:ring-bocra-blue outline-none transition-all" />
+                                                <input required id="email" value={formData.email} onChange={handleChange} type="email" maxLength={255} className="w-full px-4 py-3 rounded-xl bg-muted/50 border border-border focus:border-bocra-blue focus:ring-1 focus:ring-bocra-blue outline-none transition-all" />
                                             </div>
 
                                             <div className="space-y-2">
@@ -195,8 +223,14 @@ export default function ContactPage() {
 
                                             <div className="space-y-2">
                                                 <label htmlFor="message" className="text-sm font-medium text-foreground">Message</label>
-                                                <textarea required id="message" value={formData.message} onChange={handleChange} rows={5} className="w-full px-4 py-3 rounded-xl bg-muted/50 border border-border focus:border-bocra-blue focus:ring-1 focus:ring-bocra-blue outline-none transition-all resize-none"></textarea>
+                                                <textarea required id="message" value={formData.message} onChange={handleChange} rows={5} minLength={15} maxLength={4000} className="w-full px-4 py-3 rounded-xl bg-muted/50 border border-border focus:border-bocra-blue focus:ring-1 focus:ring-bocra-blue outline-none transition-all resize-none"></textarea>
                                             </div>
+
+                                            <CaptchaField
+                                                value={captchaToken}
+                                                onChange={setCaptchaToken}
+                                                refreshKey={captchaRefreshKey}
+                                            />
 
                                             <button 
                                                 disabled={loading}

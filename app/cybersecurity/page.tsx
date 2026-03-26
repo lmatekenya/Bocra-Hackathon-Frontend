@@ -6,6 +6,7 @@ import { Footer } from "@/components/footer"
 import { Shield, AlertTriangle, ShieldAlert, CheckCircle, FileWarning, Loader2, AlertCircle } from "lucide-react"
 import { submitCyberIncident } from "@/lib/api"
 import { motion } from "framer-motion"
+import { CaptchaField } from "@/components/captcha-field"
 
 const advisories = [
     {
@@ -39,6 +40,8 @@ export default function CybersecurityPage() {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const [incidentId, setIncidentId] = useState("")
+    const [captchaToken, setCaptchaToken] = useState("")
+    const [captchaRefreshKey, setCaptchaRefreshKey] = useState(0)
     
     const [formData, setFormData] = useState({
         reporterType: "",
@@ -55,20 +58,47 @@ export default function CybersecurityPage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
+        if (formData.description.trim().length < 20) {
+            setError("Please provide at least 20 characters in the incident description.")
+            return
+        }
+        if (!captchaToken) {
+            setError("Please complete the security check before submitting.")
+            return
+        }
+
         setLoading(true)
         setError(null)
         
         try {
-            const res = await submitCyberIncident(formData)
+            const res = await submitCyberIncident({
+                ...formData,
+                reporterType: formData.reporterType.trim(),
+                incidentType: formData.incidentType.trim(),
+                email: formData.email.trim(),
+                description: formData.description.trim(),
+                organizationName: formData.organizationName.trim(),
+                dateOfIncident: formData.dateOfIncident.trim(),
+                captchaToken,
+            })
             if (res.success) {
                 setIncidentId(res.incidentId || "")
                 setSuccess(true)
+                setFormData({
+                    reporterType: "",
+                    incidentType: "",
+                    email: "",
+                    description: "",
+                    organizationName: "",
+                    dateOfIncident: new Date().toISOString().split('T')[0]
+                })
             } else {
                 setError(res.message || "Failed to submit report")
             }
         } catch (err: any) {
             setError(err.message || "Connection error")
         } finally {
+            setCaptchaRefreshKey((prev) => prev + 1)
             setLoading(false)
         }
     }
@@ -194,15 +224,21 @@ export default function CybersecurityPage() {
                                             </div>
 
                                             <div className="space-y-2">
-                                                <label className="text-xs font-semibold uppercase text-muted-foreground">Contact Email</label>
-                                                <input name="email" value={formData.email} onChange={handleChange} required type="email" placeholder="Secure comms address" className="w-full px-4 py-3 rounded-xl bg-muted/50 border border-border focus:border-bocra-blue outline-none transition-all" />
+                                                    <label className="text-xs font-semibold uppercase text-muted-foreground">Contact Email</label>
+                                                <input name="email" value={formData.email} onChange={handleChange} required type="email" maxLength={255} placeholder="Secure comms address" className="w-full px-4 py-3 rounded-xl bg-muted/50 border border-border focus:border-bocra-blue outline-none transition-all" />
                                             </div>
 
                                             <div className="space-y-2">
                                                 <label className="text-xs font-semibold uppercase text-muted-foreground">Description</label>
-                                                <textarea name="description" value={formData.description} onChange={handleChange} required rows={4} placeholder="Summary of what happened..." className="w-full px-4 py-3 rounded-xl bg-muted/50 border border-border focus:border-bocra-blue outline-none transition-all resize-none"></textarea>
+                                                <textarea name="description" value={formData.description} onChange={handleChange} required rows={4} minLength={20} maxLength={5000} placeholder="Summary of what happened..." className="w-full px-4 py-3 rounded-xl bg-muted/50 border border-border focus:border-bocra-blue outline-none transition-all resize-none"></textarea>
                                             </div>
                                         </div>
+
+                                        <CaptchaField
+                                            value={captchaToken}
+                                            onChange={setCaptchaToken}
+                                            refreshKey={captchaRefreshKey}
+                                        />
 
                                         <button
                                             type="submit"
